@@ -34,3 +34,6 @@ Thumbs.db
 # Cache
 .cache/
 .eslintcache
+
+# Local Netlify folder
+.netlify
