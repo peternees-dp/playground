@@ -1,6 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Star, Download, ExternalLink, Shield, Check } from 'lucide-react'
+import { ChevronRight, Star, Download, BookOpen, Shield, Check, Bot, Zap, ExternalLink, MessageSquare } from 'lucide-react'
 import { getAppById, apps } from '@/data/apps'
 
 interface AppDetailPageProps {
@@ -9,195 +12,249 @@ interface AppDetailPageProps {
 
 export function generateStaticParams() {
   return apps.map((app) => ({
-    id: app.id,
+    id: app.slug,
   }))
 }
 
+function AppLogo({ logo, name }: { logo: string; name: string }) {
+  return (
+    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gray-100 flex items-center justify-center flex-shrink-0">
+      <img 
+        src={logo} 
+        alt={name} 
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement
+          target.style.display = 'none'
+          target.parentElement!.innerHTML = `<span class="text-2xl font-bold text-gray-400">${name.charAt(0)}</span>`
+        }}
+      />
+    </div>
+  )
+}
+
 export default function AppDetailPage({ params }: AppDetailPageProps) {
-  const app = getAppById(params.id)
+  const app = apps.find(a => a.slug === params.id) || getAppById(params.id)
+  const [activeTab, setActiveTab] = useState('overview')
 
   if (!app) {
     notFound()
   }
 
+  const isAgenticAI = app.category === 'Agentic AI'
+  const hasDialpadEverywhere = app.features?.some(f => f.toLowerCase().includes('dialpad everywhere'))
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Breadcrumbs */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Link
-            href="/apps"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-primary-600 mb-6"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Apps
-          </Link>
-
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* App Icon */}
-            <div className="text-6xl">{app.icon}</div>
-
-            {/* App Info */}
-            <div className="flex-1">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">{app.name}</h1>
-                  <p className="text-gray-500 mt-1">by {app.developer}</p>
-                </div>
-                <div className="flex gap-3">
-                  <button className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors font-medium inline-flex items-center gap-2">
-                    <Download className="h-5 w-5" />
-                    Install
-                  </button>
-                  <button className="border border-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                    <ExternalLink className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6 mt-4">
-                <div className="flex items-center gap-1">
-                  <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                  <span className="font-semibold text-gray-900">{app.rating}</span>
-                  <span className="text-gray-500">({app.reviews} reviews)</span>
-                </div>
-                <div className="text-gray-500">{app.installs} installs</div>
-                <div className="font-semibold text-primary-600">{app.price}</div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 mt-4">
-                {app.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link href="/" className="text-gray-500 hover:text-indigo-600">Marketplace</Link>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <Link href={`/apps?category=${encodeURIComponent(app.category)}`} className="text-gray-500 hover:text-indigo-600">{app.category}</Link>
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-900">{app.name}</span>
+          </nav>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">About this app</h2>
-              <p className="text-gray-600 leading-relaxed">{app.description}</p>
-            </div>
-
-            {/* Screenshots */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Screenshots</h2>
-              <div className="grid grid-cols-2 gap-4">
-                {app.screenshots.map((screenshot, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center text-gray-400"
-                  >
-                    Screenshot {index + 1}
+          <div className="flex-1">
+            {/* Header Card */}
+            <div className={`rounded-2xl border p-6 mb-6 shadow-sm ${
+              isAgenticAI 
+                ? 'bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200'
+                : 'bg-white border-gray-200'
+            }`}>
+              <div className="flex flex-col sm:flex-row items-start gap-6">
+                <AppLogo logo={app.logo} name={app.name} />
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2 flex-wrap">
+                    <h1 className="text-2xl font-bold text-gray-900">{app.name}</h1>
+                    {isAgenticAI && (
+                      <span className="px-2.5 py-1 bg-purple-600 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-sm">
+                        <Bot className="w-3 h-3" /> DialpadGPT
+                      </span>
+                    )}
+                    {app.aiPowered && !isAgenticAI && (
+                      <span className="px-2.5 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full flex items-center gap-1">
+                        <Bot className="w-3 h-3" /> AI-Powered
+                      </span>
+                    )}
+                    {app.isNew && (
+                      <span className="px-2.5 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">New</span>
+                    )}
+                    {app.developerType === 'native' && (
+                      <span className="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">Native Integration</span>
+                    )}
                   </div>
-                ))}
+                  <p className="text-sm text-gray-500 mb-3">By {app.developer} • {app.category}</p>
+                  <div className="flex items-center gap-4 mb-4 flex-wrap">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                      <span className="font-semibold text-gray-900">{app.rating}</span>
+                      <span className="text-sm text-gray-400">({app.reviews?.toLocaleString()} reviews)</span>
+                    </div>
+                    <span className="text-sm text-gray-400">•</span>
+                    <span className="text-sm text-gray-500">{app.installs} installs</span>
+                    <span className="text-sm text-gray-400">•</span>
+                    <span className={`text-sm font-semibold ${app.pricing === 'free' ? 'text-green-600' : 'text-indigo-600'}`}>
+                      {app.pricing === 'free' ? 'Free' : 'Paid'}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button className={`px-6 py-3 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg ${
+                      isAgenticAI 
+                        ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/25' 
+                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/25'
+                    }`}>
+                      <Download className="w-4 h-4" />
+                      Install Now
+                    </button>
+                    <button className="px-6 py-3 bg-gray-100 text-gray-900 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2">
+                      <BookOpen className="w-4 h-4" />
+                      Setup Guide
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Reviews */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Reviews</h2>
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="border-b border-gray-100 pb-4 last:border-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 ${star <= 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500">2 days ago</span>
-                    </div>
-                    <p className="text-gray-600 text-sm">
-                      Great app! Really helped streamline our workflow. The integration was seamless and support is excellent.
-                    </p>
-                  </div>
+            {/* Dialpad Everywhere Banner */}
+            {hasDialpadEverywhere && (
+              <div className="rounded-2xl p-5 mb-6 flex items-center gap-4 bg-gradient-to-r from-indigo-100 to-purple-100 border border-indigo-200">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-500">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">Dialpad Everywhere</h3>
+                  <p className="text-sm text-gray-600">Access live transcription and AI coaching directly within {app.name}</p>
+                </div>
+                <a href="#" className="flex items-center gap-1 text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                  Learn more <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            )}
+
+            {/* Tabs */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="flex border-b border-gray-200">
+                {['overview', 'features', 'screenshots'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-6 py-4 text-sm font-medium capitalize transition-colors relative ${
+                      activeTab === tab
+                        ? 'text-indigo-600'
+                        : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    {tab}
+                    {activeTab === tab && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"></div>
+                    )}
+                  </button>
                 ))}
+              </div>
+
+              <div className="p-6">
+                {activeTab === 'overview' && (
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{app.description}</p>
+                )}
+
+                {activeTab === 'features' && (
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {app.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-50">
+                        <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                          <Check className="w-4 h-4 text-green-600" />
+                        </div>
+                        <span className="text-gray-600">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === 'screenshots' && (
+                  <div className="grid gap-4">
+                    {app.screenshots && app.screenshots.length > 0 ? (
+                      app.screenshots.map((screenshot, i) => (
+                        <img
+                          key={i}
+                          src={screenshot}
+                          alt={`${app.name} screenshot ${i + 1}`}
+                          className="rounded-xl w-full object-cover shadow-lg"
+                          onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-center py-8 text-gray-400">No screenshots available</p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Info */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <aside className="lg:w-80 flex-shrink-0 space-y-6">
+            {/* Info Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
               <h3 className="font-semibold text-gray-900 mb-4">Information</h3>
-              <dl className="space-y-3">
+              <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Category</dt>
-                  <dd className="text-gray-900 capitalize">{app.category.replace('-', ' ')}</dd>
+                  <dd className="text-gray-900">{app.category}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Developer</dt>
                   <dd className="text-gray-900">{app.developer}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Version</dt>
-                  <dd className="text-gray-900">2.4.1</dd>
+                  <dt className="text-gray-500">Type</dt>
+                  <dd className="text-gray-900">{app.developerType === 'native' ? 'Native Integration' : 'Partner App'}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Updated</dt>
-                  <dd className="text-gray-900">Jan 15, 2024</dd>
+                  <dt className="text-gray-500">Last Updated</dt>
+                  <dd className="text-gray-900">{app.lastUpdated}</dd>
                 </div>
               </dl>
             </div>
 
-            {/* Security */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-gray-900">Security & Privacy</h3>
+            {/* Security Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-600" />
+                Security & Compliance
+              </h3>
+              <div className="space-y-3">
+                {['SOC 2 Type II Compliant', 'GDPR Ready', 'Enterprise SSO', 'Data Encryption'].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm text-gray-600">{item}</span>
+                  </div>
+                ))}
               </div>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <Check className="h-4 w-4 text-green-600" />
-                  Verified developer
-                </li>
-                <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <Check className="h-4 w-4 text-green-600" />
-                  Data encryption
-                </li>
-                <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <Check className="h-4 w-4 text-green-600" />
-                  GDPR compliant
-                </li>
-                <li className="flex items-center gap-2 text-sm text-gray-600">
-                  <Check className="h-4 w-4 text-green-600" />
-                  SOC 2 certified
-                </li>
-              </ul>
             </div>
 
-            {/* Support */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
+            {/* Support Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
               <h3 className="font-semibold text-gray-900 mb-4">Support</h3>
-              <div className="space-y-2">
-                <a href="#" className="block text-primary-600 hover:text-primary-700 text-sm">
+              <div className="space-y-3">
+                <a href={app.documentationUrl || '#'} className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                  <BookOpen className="w-4 h-4" />
                   Documentation
                 </a>
-                <a href="#" className="block text-primary-600 hover:text-primary-700 text-sm">
-                  Contact Support
-                </a>
-                <a href="#" className="block text-primary-600 hover:text-primary-700 text-sm">
-                  Report an Issue
+                <a href={app.supportUrl || '#'} className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                  <MessageSquare className="w-4 h-4" />
+                  Get Help
                 </a>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>
