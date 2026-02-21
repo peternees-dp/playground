@@ -1,17 +1,18 @@
 import React from 'react'
-import { Search, Grid3X3, List, Sparkles, Users, Headphones, Brain, Zap, Heart } from 'lucide-react'
+import { Search, Grid3X3, List, Sparkles, Users, Headphones, Zap, Heart, Bot, ArrowRight } from 'lucide-react'
 import { FeaturedAppCard, AppCard, AppListItem } from './AppCard'
 
-const ICON_MAP = { Grid3X3, Users, Headphones, Brain, Zap, Heart }
+const ICON_MAP = { Grid3X3, Users, Headphones, Sparkles, Zap, Heart }
 
 export default function Marketplace({ 
-  integrations, categories, searchQuery, setSearchQuery, 
+  integrations, categories, collections, searchQuery, setSearchQuery, 
   selectedCategory, setSelectedCategory, pricingFilter, setPricingFilter, 
   developerFilter, setDeveloperFilter, viewMode, setViewMode, 
   navigateToDetail, darkMode 
 }) {
   const featuredApps = integrations.filter(app => app.featured)
-  const suggestions = ['CRM apps', 'AI-powered', 'Helpdesk tools', 'Productivity']
+  const aiApps = integrations.filter(app => app.category === 'Agentic AI' || app.aiPowered)
+  const suggestions = ['DialpadGPT', 'CRM integrations', 'Helpdesk', 'Healthcare']
 
   return (
     <>
@@ -146,6 +147,31 @@ export default function Marketplace({
 
           {/* App Grid */}
           <div className="flex-1">
+            {/* Agentic AI Spotlight - Stripe-style gradient */}
+            {selectedCategory === 'all' && !searchQuery && (
+              <div className="mb-10">
+                <div className={`relative overflow-hidden rounded-2xl p-8 ${darkMode ? 'bg-gradient-to-br from-purple-900/50 via-indigo-900/50 to-blue-900/50 border border-purple-700/30' : 'bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600'}`}>
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+                  <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Bot className="w-6 h-6 text-purple-300" />
+                        <span className="text-purple-200 text-sm font-semibold uppercase tracking-wider">Powered by DialpadGPT</span>
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Agentic AI Integrations</h2>
+                      <p className="text-purple-100/80 max-w-xl">Transform every conversation with AI-powered coaching, real-time insights, and automated workflows. Built on billions of minutes of business conversations.</p>
+                    </div>
+                    <button 
+                      onClick={() => setSelectedCategory('Agentic AI')}
+                      className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold transition-all border border-white/20"
+                    >
+                      Explore AI Apps <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Featured Section */}
             {featuredApps.length > 0 && selectedCategory === 'all' && !searchQuery && (
               <div className="mb-10">
@@ -154,7 +180,7 @@ export default function Marketplace({
                   Featured Integrations
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {featuredApps.slice(0, 2).map(app => (
+                  {featuredApps.slice(0, 4).map(app => (
                     <FeaturedAppCard key={app.id} app={app} onClick={() => navigateToDetail(app)} darkMode={darkMode} />
                   ))}
                 </div>

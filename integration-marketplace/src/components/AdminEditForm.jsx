@@ -6,7 +6,7 @@ export default function AdminEditForm({ app, onSave, onCancel, darkMode }) {
     name: app?.name || '',
     slug: app?.slug || '',
     logo: app?.logo || '',
-    category: app?.category || 'CRM',
+    category: app?.category || 'Agentic AI',
     developer: app?.developer || 'Dialpad',
     developerType: app?.developerType || 'native',
     shortDescription: app?.shortDescription || '',
@@ -111,9 +111,9 @@ export default function AdminEditForm({ app, onSave, onCancel, darkMode }) {
               <div>
                 <label className={labelClass}>Category *</label>
                 <select value={formData.category} onChange={(e) => handleChange('category', e.target.value)} className={inputClass}>
+                  <option value="Agentic AI">Agentic AI</option>
                   <option value="CRM">CRM</option>
                   <option value="Helpdesk">Helpdesk</option>
-                  <option value="AI & Automation">AI & Automation</option>
                   <option value="Productivity">Productivity</option>
                   <option value="Healthcare">Healthcare</option>
                 </select>

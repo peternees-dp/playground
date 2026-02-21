@@ -1,15 +1,29 @@
 export const INITIAL_MOCK_DATA = [
   {
+    id: 'dialpadgpt', name: 'DialpadGPT', slug: 'dialpadgpt',
+    logo: 'https://logo.clearbit.com/dialpad.com', category: 'Agentic AI',
+    developer: 'Dialpad', developerType: 'native',
+    shortDescription: 'AI-powered real-time coaching, automated summaries, and intelligent agent assist.',
+    longDescription: 'DialpadGPT is the AI engine powering next-generation customer conversations. Get real-time coaching suggestions, automated post-call summaries, sentiment analysis, and intelligent knowledge base recommendations—all without lifting a finger. Built on proprietary AI trained on billions of minutes of business conversations.',
+    features: ['Real-time AI coaching & suggestions', 'Automated call summaries & action items', 'Live sentiment analysis', 'Intelligent knowledge base lookup', 'Compliance monitoring & alerts', 'Custom AI playbooks', 'Multi-language support', 'CRM auto-population'],
+    screenshots: ['https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=450&fit=crop', 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=450&fit=crop'],
+    pricing: 'paid', rating: 4.9, reviews: 2341, installs: '100K+',
+    featured: true, isNew: false, aiPowered: true, status: 'published',
+    lastUpdated: '2024-01-20', supportUrl: '#', documentationUrl: '#',
+    collection: 'agentic-ai'
+  },
+  {
     id: 'salesforce', name: 'Salesforce', slug: 'salesforce',
     logo: 'https://logo.clearbit.com/salesforce.com', category: 'CRM',
     developer: 'Dialpad', developerType: 'native',
     shortDescription: 'Sync calls, transcripts, and AI insights directly into Salesforce records.',
-    longDescription: 'Transform your Salesforce workflow with Dialpad native integration. Every call, meeting, and message is automatically logged with AI-powered transcripts and sentiment analysis. Access live transcription and AI coaching directly within Salesforce using Dialpad Everywhere.',
-    features: ['Automatic call logging with transcripts', 'Real-time AI sentiment analysis', 'Click-to-call from Salesforce', 'Bi-directional contact sync', 'Custom disposition codes', 'Screen pop for incoming calls'],
+    longDescription: 'Transform your Salesforce workflow with Dialpad native integration. Every call, meeting, and message is automatically logged with AI-powered transcripts and sentiment analysis. Access live transcription and AI coaching directly within Salesforce using Dialpad Everywhere—the embedded widget that brings real-time AI assistance into your CRM.',
+    features: ['Automatic call logging with transcripts', 'Real-time AI sentiment analysis', 'Click-to-call from Salesforce', 'Bi-directional contact sync', 'Custom disposition codes', 'Screen pop for incoming calls', 'Dialpad Everywhere widget', 'AI-powered call summaries'],
     screenshots: ['https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=450&fit=crop'],
     pricing: 'free', rating: 4.8, reviews: 1247, installs: '50K+',
     featured: true, isNew: false, aiPowered: true, status: 'published',
-    lastUpdated: '2024-01-15', supportUrl: '#', documentationUrl: '#'
+    lastUpdated: '2024-01-15', supportUrl: '#', documentationUrl: '#',
+    collection: 'customer-engagement'
   },
   {
     id: 'slack', name: 'Slack', slug: 'slack',
@@ -84,16 +98,17 @@ export const INITIAL_MOCK_DATA = [
     lastUpdated: '2024-01-18', supportUrl: '#', documentationUrl: '#'
   },
   {
-    id: 'dialpadgpt', name: 'DialpadGPT Agent Assist', slug: 'dialpadgpt',
-    logo: 'https://logo.clearbit.com/dialpad.com', category: 'AI & Automation',
+    id: 'google-workspace', name: 'Google Workspace', slug: 'google-workspace',
+    logo: 'https://logo.clearbit.com/google.com', category: 'Productivity',
     developer: 'Dialpad', developerType: 'native',
-    shortDescription: 'AI-powered real-time agent assistance and coaching.',
-    longDescription: 'Leverage DialpadGPT for real-time agent coaching, automated call summaries, and intelligent suggestions during customer conversations.',
-    features: ['Real-time AI coaching', 'Automated call summaries', 'Sentiment analysis', 'Knowledge base suggestions', 'Compliance monitoring', 'Performance insights'],
-    screenshots: ['https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=450&fit=crop'],
-    pricing: 'paid', rating: 4.9, reviews: 523, installs: '30K+',
-    featured: true, isNew: true, aiPowered: true, status: 'published',
-    lastUpdated: '2024-01-20', supportUrl: '#', documentationUrl: '#'
+    shortDescription: 'Complete Google Workspace integration with Gmail, Drive, and Meet.',
+    longDescription: 'Unify your communications with full Google Workspace integration. Click-to-call from Gmail, sync contacts from Google Contacts, store recordings in Drive, and seamlessly transition between Dialpad and Google Meet.',
+    features: ['Gmail click-to-call', 'Google Contacts sync', 'Drive recording storage', 'Google Meet integration', 'Chrome extension', 'SSO with Google'],
+    screenshots: ['https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&h=450&fit=crop'],
+    pricing: 'free', rating: 4.8, reviews: 1567, installs: '150K+',
+    featured: false, isNew: false, aiPowered: false, status: 'published',
+    lastUpdated: '2024-01-16', supportUrl: '#', documentationUrl: '#',
+    collection: 'productivity'
   },
   {
     id: 'epic', name: 'Epic EHR', slug: 'epic',
@@ -117,17 +132,51 @@ export const INITIAL_MOCK_DATA = [
     screenshots: ['https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=450&fit=crop'],
     pricing: 'free', rating: 4.4, reviews: 312, installs: '20K+',
     featured: false, isNew: false, aiPowered: true, status: 'published',
-    lastUpdated: '2024-01-09', supportUrl: '#', documentationUrl: '#'
+    lastUpdated: '2024-01-09', supportUrl: '#', documentationUrl: '#',
+    collection: 'customer-engagement'
+  },
+  {
+    id: 'athenahealth', name: 'AthenaHealth', slug: 'athenahealth',
+    logo: 'https://logo.clearbit.com/athenahealth.com', category: 'Healthcare',
+    developer: 'Dialpad', developerType: 'native',
+    shortDescription: 'Streamline patient communications with AthenaHealth EHR integration.',
+    longDescription: 'HIPAA-compliant integration connecting Dialpad with AthenaHealth electronic health records. Enable seamless patient outreach, appointment scheduling calls, and automatic documentation of all voice interactions.',
+    features: ['HIPAA-compliant calling', 'Patient record lookup', 'Appointment scheduling', 'Call documentation', 'Secure voicemail', 'Care coordination'],
+    screenshots: ['https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=450&fit=crop'],
+    pricing: 'paid', rating: 4.6, reviews: 189, installs: '8K+',
+    featured: false, isNew: true, aiPowered: true, status: 'published',
+    lastUpdated: '2024-01-19', supportUrl: '#', documentationUrl: '#',
+    collection: 'healthcare'
+  },
+  {
+    id: 'ai-csat', name: 'AI CSAT Analysis', slug: 'ai-csat',
+    logo: 'https://logo.clearbit.com/dialpad.com', category: 'Agentic AI',
+    developer: 'Dialpad', developerType: 'native',
+    shortDescription: 'Predict customer satisfaction scores using AI-powered conversation analysis.',
+    longDescription: 'Leverage DialpadGPT to automatically predict CSAT scores from every conversation. Identify at-risk customers in real-time, surface coaching opportunities, and track satisfaction trends across your entire organization.',
+    features: ['Predictive CSAT scoring', 'Real-time alerts', 'Trend analysis', 'Agent performance insights', 'Custom scoring models', 'API access'],
+    screenshots: ['https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop'],
+    pricing: 'paid', rating: 4.8, reviews: 342, installs: '25K+',
+    featured: true, isNew: true, aiPowered: true, status: 'published',
+    lastUpdated: '2024-01-21', supportUrl: '#', documentationUrl: '#',
+    collection: 'agentic-ai'
   }
 ]
 
 export const CATEGORIES = [
   { id: 'all', name: 'All Integrations', icon: 'Grid3X3' },
+  { id: 'Agentic AI', name: 'Agentic AI', icon: 'Sparkles' },
   { id: 'CRM', name: 'CRM', icon: 'Users' },
   { id: 'Helpdesk', name: 'Helpdesk', icon: 'Headphones' },
-  { id: 'AI & Automation', name: 'AI & Automation', icon: 'Brain' },
   { id: 'Productivity', name: 'Productivity', icon: 'Zap' },
   { id: 'Healthcare', name: 'Healthcare', icon: 'Heart' },
+]
+
+export const COLLECTIONS = [
+  { id: 'agentic-ai', name: 'Agentic AI', description: 'Apps powered by DialpadGPT and AI-driven outcomes' },
+  { id: 'customer-engagement', name: 'Customer Engagement', description: 'CRM giants like Salesforce, HubSpot, and Dynamics 365' },
+  { id: 'productivity', name: 'Productivity & Collaboration', description: 'Slack, Google Workspace, and Microsoft Teams' },
+  { id: 'healthcare', name: 'Healthcare & EHR', description: 'Epic, AthenaHealth, and HIPAA-compliant integrations' },
 ]
 
 export const STORAGE_KEY = 'dialpad_marketplace_data'

@@ -1,3 +1,5 @@
+@import '@dialpad/dialtone-css/lib/dist/css/dialtone.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

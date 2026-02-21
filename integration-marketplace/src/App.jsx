@@ -4,7 +4,7 @@ import Marketplace from './components/Marketplace'
 import AppDetail from './components/AppDetail'
 import AdminDashboard from './components/AdminDashboard'
 import AdminEditForm from './components/AdminEditForm'
-import { INITIAL_MOCK_DATA, CATEGORIES, loadFromStorage, saveToStorage } from './data/mockData'
+import { INITIAL_MOCK_DATA, CATEGORIES, COLLECTIONS, loadFromStorage, saveToStorage } from './data/mockData'
 import { Grid3X3, Users, Headphones, Brain, Zap, Heart } from 'lucide-react'
 
 const ICON_MAP = { Grid3X3, Users, Headphones, Brain, Zap, Heart }
@@ -139,6 +139,7 @@ export default function App() {
           <Marketplace
             integrations={filteredIntegrations}
             categories={categoriesWithCounts}
+            collections={COLLECTIONS}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             selectedCategory={selectedCategory}

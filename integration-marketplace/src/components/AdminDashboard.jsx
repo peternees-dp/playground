@@ -1,21 +1,26 @@
 import React, { useState } from 'react'
-import { Search, Plus, Edit2, Trash2, Eye, EyeOff, Star } from 'lucide-react'
+import { Search, Plus, Edit2, Trash2, Eye, EyeOff, Star, Bot, TrendingUp, Package, FileText } from 'lucide-react'
 import AppLogo from './AppLogo'
 
 export default function AdminDashboard({ integrations, navigateToEdit, handleDeleteApp, handleToggleStatus, darkMode }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [categoryFilter, setCategoryFilter] = useState('all')
 
   const filteredApps = integrations.filter(app => {
     if (searchQuery && !app.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
     if (statusFilter !== 'all' && app.status !== statusFilter) return false
+    if (categoryFilter !== 'all' && app.category !== categoryFilter) return false
     return true
   })
+
+  const categories = [...new Set(integrations.map(a => a.category))]
 
   const stats = {
     total: integrations.length,
     published: integrations.filter(a => a.status === 'published').length,
     draft: integrations.filter(a => a.status === 'draft').length,
+    aiPowered: integrations.filter(a => a.aiPowered || a.category === 'Agentic AI').length,
   }
 
   return (
@@ -37,18 +42,34 @@ export default function AdminDashboard({ integrations, navigateToEdit, handleDel
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
           <div className={`rounded-2xl border p-6 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} shadow-sm`}>
-            <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Integrations</p>
+            <div className="flex items-center justify-between">
+              <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total</p>
+              <Package className={`w-5 h-5 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`} />
+            </div>
             <p className={`text-3xl font-bold mt-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.total}</p>
           </div>
           <div className={`rounded-2xl border p-6 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} shadow-sm`}>
-            <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Published</p>
+            <div className="flex items-center justify-between">
+              <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Published</p>
+              <TrendingUp className="w-5 h-5 text-green-500" />
+            </div>
             <p className="text-3xl font-bold mt-2 text-green-600">{stats.published}</p>
           </div>
           <div className={`rounded-2xl border p-6 ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} shadow-sm`}>
-            <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Draft</p>
+            <div className="flex items-center justify-between">
+              <p className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Draft</p>
+              <FileText className="w-5 h-5 text-yellow-500" />
+            </div>
             <p className="text-3xl font-bold mt-2 text-yellow-600">{stats.draft}</p>
+          </div>
+          <div className={`rounded-2xl border p-6 ${darkMode ? 'bg-gradient-to-br from-purple-900/30 to-indigo-900/30 border-purple-700/50' : 'bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200'} shadow-sm`}>
+            <div className="flex items-center justify-between">
+              <p className={`text-sm font-medium ${darkMode ? 'text-purple-300' : 'text-purple-600'}`}>AI-Powered</p>
+              <Bot className="w-5 h-5 text-purple-500" />
+            </div>
+            <p className="text-3xl font-bold mt-2 text-purple-600">{stats.aiPowered}</p>
           </div>
         </div>
 
@@ -66,6 +87,16 @@ export default function AdminDashboard({ integrations, navigateToEdit, handleDel
                 className={`flex-1 px-3 py-2.5 bg-transparent outline-none text-sm ${darkMode ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'}`} 
               />
             </div>
+            <select 
+              value={categoryFilter} 
+              onChange={(e) => setCategoryFilter(e.target.value)} 
+              className={`px-4 py-2.5 rounded-xl border text-sm font-medium ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-200 text-gray-900'}`}
+            >
+              <option value="all">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
             <select 
               value={statusFilter} 
               onChange={(e) => setStatusFilter(e.target.value)} 
