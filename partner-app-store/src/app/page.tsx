@@ -1,39 +1,68 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Sparkles, Users, Zap, Shield } from 'lucide-react'
-import AppCard from '@/components/AppCard'
-import CategoryCard from '@/components/CategoryCard'
-import { apps, categories, getFeaturedApps, getNewApps } from '@/data/apps'
+import { ArrowRight, Sparkles, Users, Zap, Shield, Search, Bot, Heart, Headphones, Grid3X3 } from 'lucide-react'
+import AppCard, { FeaturedAppCard } from '@/components/AppCard'
+import { apps, categories, getFeaturedApps, getNewApps, getAIApps } from '@/data/apps'
 
 export default function Home() {
   const featuredApps = getFeaturedApps()
   const newApps = getNewApps()
+  const aiApps = getAIApps()
+  const [searchQuery, setSearchQuery] = useState('')
+  
+  const suggestions = ['DialpadGPT', 'CRM integrations', 'Helpdesk', 'Healthcare']
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-              Discover Apps That Power Your Business
-            </h1>
-            <p className="mt-6 text-xl text-primary-100">
-              Explore our ecosystem of partner applications. Find the perfect tools to integrate, automate, and scale your operations.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/apps"
-                className="bg-white text-primary-700 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors inline-flex items-center gap-2"
-              >
-                Browse Apps
-                <ArrowRight className="h-5 w-5" />
+      {/* Hero Section with Gradient Mesh */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 mb-6">
+            Integration{' '}
+            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Marketplace
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Connect Dialpad with your favorite tools. Discover AI-powered integrations that transform your communication workflow.
+          </p>
+
+          {/* Search Bar */}
+          <div className="relative max-w-2xl mx-auto">
+            <div className="flex items-center rounded-2xl border-2 border-gray-200 bg-white shadow-xl focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/20 transition-all">
+              <Search className="w-5 h-5 ml-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search integrations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 px-4 py-4 bg-transparent outline-none text-lg text-gray-900 placeholder-gray-400"
+              />
+              <Link href="/apps" className="m-2 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                Search
               </Link>
-              <Link
-                href="/partners"
-                className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-              >
-                Become a Partner
-              </Link>
+            </div>
+
+            {/* Smart Suggestions */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {suggestions.map((suggestion, i) => (
+                <Link
+                  key={i}
+                  href={`/apps?q=${encodeURIComponent(suggestion)}`}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-50 shadow-md transition-all hover:scale-105"
+                >
+                  <Sparkles className="w-3 h-3 inline mr-1.5 text-yellow-500" />
+                  {suggestion}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -87,17 +116,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Agentic AI Spotlight */}
       <section className="py-16 lg:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className="relative overflow-hidden rounded-2xl p-8 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 mb-12">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+            <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-3">
+                  <Bot className="w-6 h-6 text-purple-300" />
+                  <span className="text-purple-200 text-sm font-semibold uppercase tracking-wider">Powered by DialpadGPT</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Agentic AI Integrations</h2>
+                <p className="text-purple-100/80 max-w-xl">Transform every conversation with AI-powered coaching, real-time insights, and automated workflows.</p>
+              </div>
+              <Link 
+                href="/apps?category=Agentic+AI"
+                className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold transition-all border border-white/20"
+              >
+                Explore AI Apps <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+          
+          <div className="text-center mb-8">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">Browse by Category</h2>
             <p className="text-gray-500 mt-2">Find the right apps for your needs</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.filter(c => c.id !== 'all').map((category) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                'Sparkles': <Sparkles className="w-6 h-6" />,
+                'Users': <Users className="w-6 h-6" />,
+                'Headphones': <Headphones className="w-6 h-6" />,
+                'Zap': <Zap className="w-6 h-6" />,
+                'Heart': <Heart className="w-6 h-6" />,
+                'Grid3X3': <Grid3X3 className="w-6 h-6" />,
+              }
+              return (
+                <Link
+                  key={category.id}
+                  href={`/apps?category=${encodeURIComponent(category.id)}`}
+                  className="flex flex-col items-center p-6 bg-white rounded-2xl border border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all group"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                    {iconMap[category.icon] || <Grid3X3 className="w-6 h-6" />}
+                  </div>
+                  <span className="font-medium text-gray-900 text-sm text-center">{category.name}</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
